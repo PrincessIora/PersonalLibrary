@@ -157,3 +157,4 @@ C:\Neu\csc130\PersonalLibrary\Tests\obj\Debug\net8.0\refint\Tests.dll
 C:\Neu\csc130\PersonalLibrary\Tests\obj\Debug\net8.0\Tests.pdb
 C:\Neu\csc130\PersonalLibrary\Tests\obj\Debug\net8.0\Tests.genruntimeconfig.cache
 C:\Neu\csc130\PersonalLibrary\Tests\obj\Debug\net8.0\ref\Tests.dll
+C:\Neu\csc130\PersonalLibrary\Tests\bin\Debug\net8.0\PersonalLibrary.staticwebassets.runtime.json

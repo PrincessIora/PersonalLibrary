@@ -1,0 +1,42 @@
+﻿body {
+    background-color: #fff0f6;
+}
+
+/* Top bar */
+.swagger-ui .topbar {
+    background-color: #ff69b4;
+}
+
+/* Main title */
+.swagger-ui .info .title {
+    color: #c2185b;
+    font-family: "Georgia", serif;
+}
+
+/* Buttons */
+.swagger-ui .btn.execute {
+    background-color: #ff69b4;
+    border-color: #ff69b4;
+}
+
+/* GET endpoints */
+.swagger-ui .opblock.opblock-get {
+    border-color: #ffb6c1;
+    background: #fff5fa;
+}
+
+/* POST endpoints */
+.swagger-ui .opblock.opblock-post {
+    border-color: #ff69b4;
+    background: #ffe4ec;
+}
+
+/* Response box */
+.swagger-ui .responses-wrapper {
+    background-color: #fffafc;
+}
+
+/* Fonts */
+.swagger-ui {
+    font-family: "Segoe UI", "Arial", sans-serif;
+}

@@ -7,6 +7,8 @@ namespace Tests
 {
     public class UnitTest1
     {
+        
+
         [Fact]
         public async Task AddBook_ShouldStoreBook()
         {
@@ -39,6 +41,25 @@ namespace Tests
 
             result.Should().HaveCount(1);
         }
+
+        [Fact]
+        public async Task Search_ShouldFilterByStatus()
+        {
+            var repo = new FakeBookRepository();
+            var service = new BookService(repo);
+
+            await service.AddBook(new Book
+            {
+                Title = "Book 1",
+                Author = "A",
+                Status = BookStatus.Finished
+            });
+
+            var result = await service.Search(null, BookStatus.Finished);
+
+            result.Should().HaveCount(1);
+        }
+
 
         [Fact]
         public async Task WantToRead_To_Reading_ShouldBeValid()
@@ -83,6 +104,8 @@ namespace Tests
             await act.Should().ThrowAsync<Exception>();
         }
 
+        
+
         [Fact]
         public async Task Should_Not_Allow_More_Than_3_Reading()
         {
@@ -111,6 +134,8 @@ namespace Tests
             await act.Should().ThrowAsync<Exception>();
         }
 
+        
+
         [Fact]
         public async Task Update_Should_Create_History_Record()
         {
@@ -129,6 +154,8 @@ namespace Tests
 
             repo.History.Should().HaveCount(1);
         }
+
+        
 
         [Fact]
         public async Task Streak_Should_Be_Active_Within_One_Day()
@@ -149,7 +176,68 @@ namespace Tests
             result.Should().BeTrue();
         }
 
+        [Fact]
+        public async Task Streak_Should_Be_False_After_Two_Days()
+        {
+            var repo = new FakeBookRepository();
+            var service = new BookService(repo);
 
+            await repo.AddHistory(new ReadingHistory
+            {
+                BookId = 1,
+                Status = BookStatus.Finished,
+                Date = DateTime.UtcNow.AddDays(-2)
+            });
 
+            var result =
+                await service.HasActiveStreak(1, DateTime.UtcNow);
+
+            result.Should().BeFalse();
+        }
+
+        
+
+        [Fact]
+        public async Task Rating_Should_Be_Stored_When_Valid()
+        {
+            var repo = new FakeBookRepository();
+            var service = new BookService(repo);
+
+            await service.AddBook(new Book
+            {
+                Status = BookStatus.WantToRead
+            });
+
+            await service.UpdateBook(1, new UpdateBookDTO
+            {
+                Rating = 5
+            });
+
+            var book = await repo.Get(1);
+
+            book.Rating.Should().Be(5);
+        }
+
+        
+
+        [Fact]
+        public async Task Invalid_State_Transition_Should_Throw()
+        {
+            var repo = new FakeBookRepository();
+            var service = new BookService(repo);
+
+            await service.AddBook(new Book
+            {
+                Status = BookStatus.WantToRead
+            });
+
+            Func<Task> act = async () =>
+                await service.UpdateBook(1, new UpdateBookDTO
+                {
+                    Status = BookStatus.Finished
+                });
+
+            await act.Should().ThrowAsync<Exception>();
+        }
     }
 }

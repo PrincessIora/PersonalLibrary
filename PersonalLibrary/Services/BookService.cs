@@ -32,28 +32,32 @@ namespace PersonalLibrary.Services
             if (book == null)
                 throw new Exception("Book not found");
 
-            var allBooks = await _repo.GetAll();
 
-            int readingCount =
-        allBooks.Count(x => x.Status == BookStatus.Reading);
-
-            // enforce rule
-            if (dto.Status == BookStatus.Reading &&
-                book.Status != BookStatus.Reading &&
-                readingCount >= 3)
+            if (dto.Status.HasValue && dto.Status != book.Status)
             {
-                throw new Exception("Max 3 books in Reading state");
-            }
+                var allBooks = await _repo.GetAll();
 
-            // state transition rule
-            if (!IsValidTransition(book.Status, dto.Status))
-            {
-                throw new Exception(
-                    $"Invalid transition: {book.Status} → {dto.Status}");
-            }
+                int readingCount =
+            allBooks.Count(x => x.Status == BookStatus.Reading);
 
-            // apply valid transition
-            book.Status = dto.Status;
+                // enforce rule
+                if (dto.Status == BookStatus.Reading &&
+                    book.Status != BookStatus.Reading &&
+                    readingCount >= 3)
+                {
+                    throw new Exception("Max 3 books in Reading state");
+                }
+
+                // state transition rule
+                if (!IsValidTransition(book.Status, dto.Status.Value))
+                {
+                    throw new Exception(
+                        $"Invalid transition: {book.Status} → {dto.Status}");
+                }
+
+                // apply valid transition
+                book.Status = dto.Status.Value;
+            }
 
             if (dto.Description != null)
                 book.Description = dto.Description;
